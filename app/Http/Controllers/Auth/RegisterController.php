@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use PragmaRX\Countries\Package\Services\Countries;
 
 class RegisterController extends Controller
 {
@@ -49,10 +50,20 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'surname' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:255'],
+            'country' => ['required', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:255'],
+            'town' => ['required', 'string', 'max:255'],
+            'profession' => ['required', 'string', 'max:255'],
+            'account_type' => ['required', 'string', 'max:255'],
+            'account_owner' => ['required', 'string', 'max:255'],
+            'want_offer' => ['boolean'],
         ]);
     }
 
@@ -64,10 +75,28 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+
         return User::create([
             'name' => $data['name'],
+            'surname' => $data['surname'],
             'email' => $data['email'],
+            'phone' => $data['phone'],
+            'country' => $data['country'],
+            'city' => $data['city'],
+            'town' => $data['town'],
+            'role_id'=>1,
+            'profession' => $data['profession'],
+            'account_type' => $data['account_type'],
+            'account_owner' => $data['account_owner'],
+            'want_offer' => $data['want_offer'] ?? 0,
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    public function showRegistrationForm()
+    {
+        $countries = new Countries();
+
+        return view('auth.register')->with('countries', $countries->all());
     }
 }
