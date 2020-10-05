@@ -8,6 +8,7 @@
     <!-- Css Files -->
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <link href="/dashboard/css/root.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     
 </head>
 <body>
@@ -17,7 +18,7 @@
     <!-- Start Top -->
     <div id="top" class="clearfix"> 
         <!-- Start App Logo -->
-        <div class="applogo" style="background-color: white"> <a href="index.html" class="logo"><img src="/images/logo_png.png" alt="Africaweb" height="80%"></a> </div>
+        <div class="applogo" style="background-color: white"> <a href={{ route('dashboard.index') }} class="logo"><img src="/images/logo_png.png" alt="Africaweb" height="80%"></a> </div>
         <!-- End App Logo --> 
         <!-- Start Sidebar Show Hide Button --> 
         <a href="#" class="sidebar-open-button"><i class="fa fa-bars"></i></a> <a href="#" class="sidebar-open-button-mobile"><i class="fa fa-bars"></i></a> 
@@ -45,22 +46,38 @@
                             <!-- End Top Right --> 
                         </div>
                         <!-- End Top --> 
-                        <!-- Start Sidabar -->
+                        <!-- Start Sidabar -->            
                         <div class="sidebar clearfix">
+                        
                             <ul class="sidebar-panel nav metismenu" id="side-menu" data-plugin="metismenu">
                                 <li class="active"><a href={{ route('dashboard.index') }}><span class="icon color5"><i class="fa fa-home" aria-hidden="true"></i></span><span class="nav-title">Tableau de bord</span></a>
                                 </li>
+                                @if(Auth::user()->role_id==2)
                                 <li><a href={{ route('users.index') }}><span class="icon color9"><i class="fa fa-users" aria-hidden="true"></i></span>Utilisateurs</a>
-                                <li><a href="#"><span class="icon color9"><i class="fa fa-circle" aria-hidden="true"></i></span>Services</a>
-                                </li>    
+                                @endif
+                                    </li>    
                                 <li><a href={{ route('domains.index') }}><span class="icon color9"><i class="fa fa-list" aria-hidden="true"></i></span>Domaines</a></li>
-                                         
+                                @if(Auth::user()->role_id==2)
+                                <li><a href="#"><span class="icon color9"><i class="fa fa-th" aria-hidden="true"></i></span>Demandes <i class="fa fa-sort-desc caret"></i></a>
+                                    <ul>
+                                        <li><a href="{{ route('demande.index',\App\Http\Helpers\Constants::DEMANDE_CREATION_DOMAINE) }}"><i class="fa fa-angle-right" aria-hidden="true"></i> Création de domaine</a></li>
+                                        <li><a href="{{ route('demande.index',\App\Http\Helpers\Constants::DEMANDE_TRANSFERT_DOMAINE) }}"><i class="fa fa-angle-right" aria-hidden="true"></i> Transferts de domaine</a></li>
+                                        <li><a href="{{ route('demande.index',\App\Http\Helpers\Constants::DEMANDE_CREATION_DOMAINE) }}"><i class="fa fa-angle-right" aria-hidden="true"></i> Création hébergement</a></li>
+                                        <li><a href="{{ route('demande.index',\App\Http\Helpers\Constants::DEMANDE_CREATION_CERTIFICAT_SSL) }}"><i class="fa fa-angle-right" aria-hidden="true"></i> Création certificats SSL</a></li>
+                                        <li><a href="{{ route('demande.index',\App\Http\Helpers\Constants::DEMANDE_MODIFICATION_DNS) }}"><i class="fa fa-angle-right" aria-hidden="true"></i> Modification DNS</a></li>
+                                        <li><a href="{{ route('demande.index',\App\Http\Helpers\Constants::DEMANDE_VERROUILLAGE_DOMAINE) }}"><i class="fa fa-angle-right" aria-hidden="true"></i> Verrouillage de domaine</a></li>
+                                        <li><a href="{{ route('demande.index',\App\Http\Helpers\Constants::DEMANDE_RENOUVELLEMENT) }}"><i class="fa fa-angle-right" aria-hidden="true"></i> Renouvellement</a></li>
+                                    </ul>
+                                </li>
+                                   @endif
+                                    @if(Auth::user()->role_id==1)
+                                        <li><a href={{ route('demande.index', 'me') }}><span class="icon color9"><i class="fa fa-list" aria-hidden="true"></i></span>Mes demandes</a></li>
+                                        @endif
                                 <li><a href={{route('payments.index')}}><span class="icon color9"><i class="fa fa-file" aria-hidden="true"></i></span>Factures</a>
                                 </li>               
                                 <li><a href="#"><span class="icon color9"><i class="fa fa-ticket" aria-hidden="true"></i></span>Tickets<span><i class="fa fa-external-link pl-3" aria-hidden="true"></i></span></a>
                                 </li>                        
-                                </li>
-                                                               
+                                </li>                 
                             </ul>
                         </div>
                         <!-- End Sidabar --> 
@@ -107,6 +124,10 @@
 <script type="text/javascript" src="/dashboard/js/counterup/jquery.counterup.min.js"></script>
 
 <script src="/dashboard/js/datatables/datatables.min.js"></script>
+
+<script src="/dashboard/js/sweet-alert/sweet-alert.min.js"></script> 
+<!-- Alert --> 
+<script src="/dashboard/js/alert/main.js"></script>
 <!-- MetisMenu --> 
 <script type="text/javascript" src="/dashboard/js/metismenu/metisMenu.min.js"></script>
 </body>

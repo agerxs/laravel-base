@@ -70,8 +70,8 @@
       <div class="container pb-60">
         <div class="row">
           <div class="col-md-12 text-center">
-            <h4>Continuer vers paiement</h4>
-            {{$cp->displayPayButton("Paiement CinetPay", 4, "large")}}
+            <h4>Payer maintenant</h4>
+            {{$cp->displayPayButton("Payer maintenant", 4, "large")}}
 
 
 

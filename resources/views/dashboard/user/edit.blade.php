@@ -9,6 +9,7 @@
                         <div class="row">
                             <form class="col-sm-12" action={{ route('users.update', ['user'=>$user->id]) }} method="post">
                                 @csrf
+                                {{ method_field('PATCH') }}
                                 <div class="row">
                                 <div class="form-group col-md-6">
                                     <label>{{ __('Nom') }}</label>
@@ -102,10 +103,12 @@
                                 </div>
                                 <div class="form-group col-sm-6">
                                     
-                                    <label class="control-label form-label">Administrateur</label>
-                                    
-                                        <input type="checkbox" name="isAdmin" data-toggle="toggle" data-onstyle="success"{{$user->isAdmin==2 ? "checked":"" }} >
-                                    </div>
+                                    <label class="">Administrateur</label>
+                                    <select name="role_id" class="form-control">
+                                        <option value="1" {{$user->role_id==1 ? "selected":"" }}>Role Utilisateur</option>
+                                        <option value="2" {{$user->role_id==2 ? "selected":"" }} >Role Administrateur</option>
+                                    </select>
+                                         </div>
                                 </div>
                                 </div>
                                     </div>

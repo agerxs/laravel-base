@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Demande;
 use App\Domain;
 use App\Http\Helpers\CinetPayHelper;
+use App\Http\Helpers\Constants;
 use App\Http\Helpers\DomainHelper;
 use App\Package;
 use App\Payment;
@@ -25,7 +27,7 @@ class FrontController extends Controller
     public function __construct()
     {
         //$this->middleware('guest');
-        $link = mysqli_connect("localhost", "root", "", "africaweb", "3308");
+        $this->link = mysqli_connect("localhost", "root", "", "africaweb", "3308");
     }
 
 
@@ -41,6 +43,11 @@ class FrontController extends Controller
 
     public function resultatDomain(Request $request)
     {
+        $pack=null;
+        if(isset($request->pack))
+        {
+            $pack=$request->pack;
+        }
         $fulldomaine = $request->domaine;
 
         $domaine = str_replace("www.", "", $fulldomaine);
@@ -52,10 +59,10 @@ class FrontController extends Controller
         $racine_domaine = urlencode($racine_domaine);
 
         $date = date('Y-m-d H:i:s');
-        //TODO : Traiter cette requête
-        //mysqli_query($this->link, "INSERT INTO `africawe_hostmngr`.`search_log` (`ref_search_log`, `item_search_log`, `created_search_log`) 
-        //VALUES (NULL, '$fulldomaine', '$date');
-        //");
+        
+        mysqli_query($this->link, "INSERT INTO `search_log` (`ref_search_log`, `item_search_log`, `created_search_log`) 
+        VALUES (NULL, '$fulldomaine', '$date');
+        ");
         $status_domaine = DomainHelper::statut_domaine($racine_domaine, $extension);
         //statut_domaine($racine_domaine,$extension) == "AVAILABLE";
 
@@ -64,7 +71,45 @@ class FrontController extends Controller
             ->with('domaine', $domaine)
             ->with('statut_domaine', $status_domaine)
             ->with('racine_domaine', $racine_domaine)
-            ->with('extension', $extension);
+            ->with('extension', $extension)
+            ->with('pack', $pack);
+    }
+
+    public function resultatDomainExtension(Request $request)
+    {
+        $pack=null;
+        if(isset($request->pack))
+        {
+            $pack=$request->pack;
+        }
+        $fulldomaine = $request->domaine.$request->tld;
+       
+
+        $domaine = str_replace("www.", "", $fulldomaine);
+
+        $extension = strstr($domaine, '.');
+        $extension = $request->tld;
+        $racine_domaine = str_replace($extension, "", $domaine);
+
+        $extension = urlencode($extension);
+        $racine_domaine = urlencode($racine_domaine);
+
+        $date = date('Y-m-d H:i:s');
+        
+        mysqli_query($this->link, "INSERT INTO `search_log` (`ref_search_log`, `item_search_log`, `created_search_log`) 
+        VALUES (NULL, '$fulldomaine', '$date');
+        ");
+        
+        $status_domaine = DomainHelper::statut_domaine($racine_domaine, $extension);
+        //statut_domaine($racine_domaine,$extension) == "AVAILABLE";
+
+        return view('resultat_domain')
+            ->with('fulldomaine', $fulldomaine)
+            ->with('domaine', $domaine)
+            ->with('statut_domaine', $status_domaine)
+            ->with('racine_domaine', $racine_domaine)
+            ->with('extension', $extension)
+            ->with('pack', $pack);
     }
 
     public function tarifs()
@@ -105,8 +150,30 @@ class FrontController extends Controller
         return view('enregistrement')->with('tlds', $tld);
     }
 
-    public function choix_formule()
+    public function enregistrementByExtension(Request $request)
     {
+        //`ref_tld`,`extension_tld`,`prixAchatEuro_tld`,`prixAchatCfa_tld`,(`prixVente_tld`*1) AS `prixVente_tld`,`tld_populaire`
+        $tld = DB::table('tld')
+            ->select([
+                'extension_tld',
+                'ref_tld',
+                'prixAchatEuro_tld',
+                'prixAchatCfa_tld',
+                'prixVente_tld AS prixVente_tld',
+                'tld_populaire'
+            ])
+            ->where('extension_tld', $request->tld)
+            ->orderBy('extension_tld')
+            ->get();
+                
+        return view('enregistrementbyextension',['tlds'=>$tld, 'pack'=>$request->pack]);
+    }
+
+    public function choix_formule(Request $request)
+    {
+        if($request->pack){
+            return view('recap_formule', ['formule'=>$request->pack]);
+        }
         return view('choix_formule');
     }
 
@@ -123,42 +190,62 @@ class FrontController extends Controller
 
     public function paiement(Request $request)
     {
-
+        $package_id=null;
+        $package_duration=12;
+        //dd($request->prix_domain);
+        $package_amount=0;
         $prix = $request->duree;
+        if(isset($prix) && $prix!=null)
+        {
         $package = Package::where('name', $prix)->first();
+        //dd($package);
+        $package_id=$package->id;
+    
+        
+        $package_duration=$package->duration;
 
+        $package_amount+=$package->total_amount;
+        //dd($package->amount);
+        if(strpos($prix,'starter')){
+            //dd('lk');
+            $package_amount+=($request->prix_domain*($package->duration/12));
+            $package_duration=$package->duration;
+        }
+    }
+    else{
+        $package_amount+=$request->prix_domain;
+    }
         //Génération d'un ID de transaction
         $trans_id = CinetPay::generateTransId();
-        $date = new DateTime();
+        $date = new \DateTime();
+        //dd($request->dns1);
         $domain = Domain::create([
             'name' => $request->domain,
             'status' => 0,
-            'package_id' => $package->id,   
+            'dns1'=>$request->dns1,
+            'dns2'=>$request->dns2,
+            'dns3'=>$request->dns3,
+            'dns4'=>$request->dns4,
+            'package_id' => $package_id,   
             'user_id' => Auth::user()->id,
-            'expires_at'=>date_add($date,date_interval_create_from_date_string($package->duration.' months'))
+            'expires_at'=>date_add($date,date_interval_create_from_date_string($package_duration.' months'))
         ]);
+        //dd($domain);
         $payment=Payment::create([
             'transaction_id' => $trans_id,
-            'amount' => $package->total_amount,
+            'amount' => $package_amount,
             'status' => 0,
             'domain_id' => $domain->id,
             'domain' => $domain->name,
             'user_id' => Auth::user()->id,
         ]);
+
         session(['domain'=>$domain]);
         session(['payment'=>$payment]);
-
-        $cp = CinetPayHelper::paiementForm($package->total_amount, Auth::user()->email, $trans_id);
+//dd($package_amount);
+        $cp = CinetPayHelper::paiementForm($package_amount, Auth::user()->email, $trans_id);
 
         return view('paiement')->with('cp', $cp);
-    }
-
-    //Url de notification
-    public function notifCinetPay(Request $request){
-        $postdatas=$request->all();
-        dd($postdatas['cpm_trans_id']);
-        $notification= CinetPayHelper::notifIPN($postdatas['cpm_trans_id']);
-        session()->flash('notification', $notification);
     }
 
     //Url d'annulation
@@ -178,6 +265,10 @@ class FrontController extends Controller
         return view('validation', ['notification'=>$notification]);
     }
 
+    public function prepostNotifyPayment()
+    {
+        return redirect()->route('back_paiement');
+    }
     //Url de retour
     public function postNotifyPayment()
     {
@@ -187,10 +278,21 @@ class FrontController extends Controller
             session()->flash('status', 'Retour!');
             //$domain=session('domain');
             //Domain::destroy($domain->id);
-            //$notification= CinetPayHelper::notifIPN(session('payment')->transaction_id);
-                    
+        $domain=session('domain');
+            $notification= CinetPayHelper::notifIPN(session('payment')->transaction_id);
+                    $demand=Demande::create([
+                        'user_id'=> Auth::user()->id,
+                        'domain_id'=>$domain,
+                        'status'=>Constants::STATUS_IS_CREATING,
+                        'type'=>Constants::DEMANDE_CREATION_DOMAINE
+                    ]);
         session()->forget('domain');
-        session()->forget('payment');
+        
         return view('validation', ['notification'=>$notification]);
     }
+
+
+
+
+
 }

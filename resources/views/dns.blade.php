@@ -98,13 +98,13 @@ if(isset($_GET['mbreadcumb'])){$menu_ul=$_GET['mbreadcumb'];}else{$menu_ul="doma
                 <div class="form-group row">
                   <label for="dns1" class="col-sm-2 text-right">DNS 1 : </label>
                   <div class="col-sm-10">
-                  <input type="text" class="form-control" id="dns1" name="dns1" placeholder="dns1.africaweb.ci" value="">
+                  <input type="text" class="form-control" id="dns1" name="dns1" placeholder="dns1.africaweb.ci" value="" required>
                   </div>
                 </div>
                 <div class="form-group row">
                   <label for="dns2" class="col-sm-2 text-right">DNS 2 : </label>
                   <div class="col-sm-10">
-                  <input type="text" class="form-control" id="dns2" name="dns2" placeholder="dns2.africaweb.ci" value="">
+                  <input type="text" class="form-control" id="dns2" name="dns2" placeholder="dns2.africaweb.ci" value="" required>
                   </div>
                 </div>
                 <div class="form-group row">
@@ -184,7 +184,7 @@ function store(){
      localStorage.setItem("dns2", dns2.value);
      localStorage.setItem("dns3", dns3.value);
      localStorage.setItem("dns4", dns4.value);
-     window.location.href = 'http://127.0.0.1:8000/recap_formule?formule=gold&domaine=letmixx.net';
+     window.location.href = '/recap_formule?formule=domain&domaine='+ '{{$_GET['domaine']}}';
   
 
     }

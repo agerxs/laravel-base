@@ -22,7 +22,9 @@ class PaymentController extends Controller
         $payments=Payment::all();
         }
         else{
-            $payments=Payment::where('user_id',Auth::user()->id);
+            
+            $payments=Payment::where('user_id',Auth::user()->id)->get();
+            //dd($payments);
         }
         return view('dashboard.payment.index', [
             'payments'=>$payments,

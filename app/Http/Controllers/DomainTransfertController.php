@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\DomainTransfert;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class DomainTransfertController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('dashboard.user.index', ['users'=>User::all()]);
+        return view('dashboard.domain_transfert.index', ['transferts'=>DomainTransfert::all()]);
     }
 
     /**
@@ -57,7 +57,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        return view('dashboard.user.edit', ['user'=>User::find($id)]);
+        //
     }
 
     /**
@@ -69,9 +69,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user=User::whereId($id)->update(request()->except(['_token', '_method']));
-
-        return redirect()->route('dashboard.index');
+        //
     }
 
     /**

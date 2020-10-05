@@ -180,10 +180,6 @@ if(isset($_GET['mbreadcumb'])){$menu_ul=$_GET['mbreadcumb'];}else{$menu_ul="doma
                     </div>
                   </div>
                 </div>
-
-
-
-
                 <div class="item">
                   <div class="pricing-table bg-white border-1px text-center">
                     <div class="pt-0 pb-40">
@@ -309,6 +305,13 @@ if(isset($_GET['mbreadcumb'])){$menu_ul=$_GET['mbreadcumb'];}else{$menu_ul="doma
 
 <!-- JS | Custom script for all pages -->
 <script src="js/custom.js"></script>
+<script>
+  $(document).ready({
 
+  @if(isset($_GET['formule']))  
+      window.location.href = '/recap_formule?formule=' +'{{$_GET['formule']}}' +'&domaine='+ '{{$_GET['domaine']}}';
+  @endif
+  });
+</script>
 </body>
 </html>

@@ -24,6 +24,7 @@ function statut_domaine($domaine,$ext)
     function prix_domaine($ext)
     {
         $link=mysqli_connect("localhost", "root", "","africaweb", "3308");
+        
     $resultat = mysqli_query($link, "SELECT `prixVente_tld` FROM `tld` where `extension_tld`='$ext'");
     while($tld = mysqli_fetch_array($resultat))
     {   
@@ -159,14 +160,31 @@ function statut_domaine($domaine,$ext)
     <section class="layer-overlay overlay-white-5 bg-silver-light" data-bg-img="images/photos/bg-pattern.png">
       <div class="container pb-60">
         <div class="row">
+          @isset($var)
+          <?php 
+          if($pack!=null)
+          { ?>
+            <div class="col-md-12 alert bg-info">
+                Vous avez sélectionné le pack {{$pack}}.
+            </div>
+            <?php
+          }
+           ?>
+           @endisset
           <div class="col-md-12">
 
 <?php
 if($statut_domaine == "AVAILABLE")
   {echo   '<font  style="font-weight: normal;font-size: 17px;" class="title text-theme-color-2">Bonne nouvelle ! <span class="text-theme-colored"  style="font-weight: bold;">'.$racine_domaine.$extension.'</span> est <span class="text-theme-colored"  style="font-weight: bold;">
-    disponible !  
-    <a href="/choix_formule?domaine='.$racine_domaine.$extension.'" 
-    class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></span></font>' ; }
+    disponible !  ';
+    if(isset($_GET['pack'])){
+echo '<a href="/choix_formule?pack='.$_GET['pack'].'&domaine='.$racine_domaine.$extension.'"' ;
+    }else
+      {
+        echo '<a href="/choix_formule?domaine='.$racine_domaine.$extension.'"' ;
+      }
+
+    echo 'class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></span></font>' ; }
 
 else
 	{echo   '<h4 class="title text-theme-color-2">Désolé ! Le domaine  <span style="color: red;">'.$racine_domaine.$extension.' </span>n\'est pas <span style="color: red;">disponible</span>. Choisissez-en un autre<span class="text-theme-colored"></span></h4>' ; }
@@ -189,10 +207,16 @@ else
                   { 
                     echo '
                 <tr>
-                  <td>'.$racine_domaine.$extension.' <font color="green">('.prix_domaine($extension).'F CFA)</font></td>
-                  <td><a href="/choix_formule?domaine='.$racine_domaine.$extension.'" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                  <td>'.$racine_domaine.$extension.' <font color="green">('.prix_domaine($extension).'F CFA)</font></td>';
+                  if(isset($_GET['pack'])){
+                    
+                  echo '<td><a href="/choix_formule?pack='.$_GET['pack'].'&domaine='.$racine_domaine.$extension.'" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
                 </tr>'
                 ;}
+                else {echo '<td><a href="/choix_formule?domaine='.$racine_domaine.$extension.'" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                </tr>';}
+              
+              }
 
 
 
@@ -200,49 +224,92 @@ else
                   { 
                     echo '
                 <tr>
-                  <td>'.$racine_domaine.'.com <font color="green">('.prix_domaine(".com").'F CFA)</font></td>
-                  <td><a href="/choix_formule?domaine='.$racine_domaine.'.com" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                  <td>'.$racine_domaine.'.com <font color="green">('.prix_domaine(".com").'F CFA)</font></td>';
+                  if(isset($_GET['pack']))
+                  {
+                    echo '<td><a href="/choix_formule?pack='.$_GET['pack'].'&domaine='.$racine_domaine.'.com" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
                 </tr>'
-                ;}
+                ;
+                  }
+                  else{
+                    echo '<td><a href="/choix_formule?domaine='.$racine_domaine.'.com" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                </tr>'
+                ;
+                  }}
 
 
                 if(statut_domaine($racine_domaine,".net") == "AVAILABLE")
                   { 
                     echo '
                 <tr>
-                  <td>'.$racine_domaine.'.net <font color="green">('.prix_domaine(".net").'F CFA)</font></td>
-                  <td><a href="/choix_formule?domaine='.$racine_domaine.'.net" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                  <td>'.$racine_domaine.'.net <font color="green">('.prix_domaine(".net").'F CFA)</font></td>';
+                  if(isset($_GET['pack']))
+                  {
+                    echo '<td><a href="/choix_formule?pack='.$_GET['pack'].'&domaine='.$racine_domaine.'.net" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
                 </tr>'
-                ;}
+                ;
+                  }
+                  else{
+                    echo '<td><a href="/choix_formule?domaine='.$racine_domaine.'.net" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                </tr>'
+                ;
+                  }}
 
                 if(statut_domaine($racine_domaine,".org") == "AVAILABLE")
                   { 
                     echo '
                 <tr>
-                  <td>'.$racine_domaine.'.org <font color="green">('.prix_domaine(".org").'F CFA)</font></td>
-                  <td><a href="/choix_formule?domaine='.$racine_domaine.'.org" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                  <td>'.$racine_domaine.'.org <font color="green">('.prix_domaine(".org").'F CFA)</font></td>';
+                  if(isset($_GET['pack']))
+                  {
+                    echo '<td><a href="/choix_formule?pack='.$_GET['pack'].'&domaine='.$racine_domaine.'.org" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
                 </tr>'
-                ;}
+                ;
+                  }
+                  else{
+                    echo '<td><a href="/choix_formule?domaine='.$racine_domaine.'.org" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                </tr>'
+                ;
+                  }
+              }
 
 
                 if(statut_domaine($racine_domaine,".info") == "AVAILABLE")
                   { 
                     echo '
                 <tr>
-                  <td>'.$racine_domaine.'.info <font color="green">('.prix_domaine(".info").'F CFA)</font></td>
-                  <td><a href="/choix_formule?domaine='.$racine_domaine.'.info" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                  <td>'.$racine_domaine.'.info <font color="green">('.prix_domaine(".info").'F CFA)</font></td>';
+                  if(isset($_GET['pack']))
+                  {
+                    echo '<td><a href="/choix_formule?pack='.$_GET['pack'].'&domaine='.$racine_domaine.'.info" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
                 </tr>'
-                ;}
+                ;
+                  }
+                  else{
+                    echo '<td><a href="/choix_formule?domaine='.$racine_domaine.'.info" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                </tr>'
+                ;
+                  }
+                }
 
 
                 if(statut_domaine($racine_domaine,"-ci.com") == "AVAILABLE")
                   { 
                     echo '
                 <tr>
-                  <td>'.$racine_domaine.'-ci.com <font color="green">('.prix_domaine(".com").'F CFA)</font></td>
-                  <td><a href="/choix_formule?domaine='.$racine_domaine.'-ci.com" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                  <td>'.$racine_domaine.'-ci.com <font color="green">('.prix_domaine(".com").'F CFA)</font></td>';
+                  if(isset($_GET['pack']))
+                  {
+                    echo '<td><a href="/choix_formule?pack='.$_GET['pack'].'&domaine='.$racine_domaine.'-ci.com" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
                 </tr>'
-                ;}
+                ;
+                  }
+                  else{
+                    echo '<td><a href="/choix_formule?domaine='.$racine_domaine.'-ci.com" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                </tr>'
+                ;
+                  }
+                }
 
 
 
@@ -250,10 +317,18 @@ else
                   { 
                     echo '
                 <tr>
-                  <td>'.$racine_domaine.'-ci.net <font color="green">('.prix_domaine(".net").'F CFA)</font></td>
-                  <td><a href="/choix_formule?domaine='.$racine_domaine.'-ci.net" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                  <td>'.$racine_domaine.'-ci.net <font color="green">('.prix_domaine(".net").'F CFA)</font></td>';
+                  if(isset($_GET['pack']))
+                  {
+                    echo '<td><a href="/choix_formule?pack='.$_GET['pack'].'&domaine='.$racine_domaine.'-ci.net" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
                 </tr>'
-                ;}
+                ;
+                  }
+                  else{
+                    echo '<td><a href="/choix_formule?domaine='.$racine_domaine.'-ci.net" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                </tr>'
+                ;
+                  }}
 
 
 
@@ -261,10 +336,18 @@ else
                   { 
                     echo '
                 <tr>
-                  <td>'.$racine_domaine.'-ci.org <font color="green">('.prix_domaine(".org").'F CFA)</font></td>
-                  <td><a href="/choix_formule?domaine='.$racine_domaine.'-ci.org" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                  <td>'.$racine_domaine.'-ci.org <font color="green">('.prix_domaine(".org").'F CFA)</font></td>';
+                  if(isset($_GET['pack']))
+                  {
+                    echo '<td><a href="/choix_formule?pack='.$_GET['pack'].'&domaine='.$racine_domaine.'-ci.org" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
                 </tr>'
-                ;}
+                ;
+                  }
+                  else{
+                    echo '<td><a href="/choix_formule?domaine='.$racine_domaine.'-ci.org" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                </tr>'
+                ;
+                  }}
 
 
 
@@ -273,10 +356,18 @@ else
                   { 
                     echo '
                 <tr>
-                  <td>'.$racine_domaine.'-ci.info <font color="green">('.prix_domaine(".info").'F CFA)</font></td>
-                  <td><a href="/choix_formule?domaine='.$racine_domaine.'-ci.info" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                  <td>'.$racine_domaine.'-ci.info <font color="green">('.prix_domaine(".info").'F CFA)</font></td>';
+                  if(isset($_GET['pack']))
+                  {
+                    echo '<td><a href="/choix_formule?pack='.$_GET['pack'].'&domaine='.$racine_domaine.'-ci.info" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
                 </tr>'
-                ;}
+                ;
+                  }
+                  else{
+                    echo '<td><a href="/choix_formule?domaine='.$racine_domaine.'-ci.org" class="btn btn-sm btn-theme-colored">Acheter ce domaine</a></td>
+                </tr>'
+                ;
+                  }}
 
                 ?>
 

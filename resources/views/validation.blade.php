@@ -7,6 +7,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 <meta name="description" content="Hostplan - Web Domain Hosting WHMCS HTML5 Template" />
 <meta name="keywords" content="hosting,domain,cloud,vps,shared,dadicated,reseller,wordpress hosting,ssd" />
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="author" content="ThemeMascot" />
 
 <!-- Page Title -->

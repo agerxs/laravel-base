@@ -15,12 +15,15 @@
                             <tr>
                                 <th>Domaine</th>
                                 <th>Status</th>
+                                <th>Package</th>
+                                <th>Renouvellement</th>
+                                <th>Verrou</th>
                                 <th>Créé le</th>
                                 <th>Expire le</th>
-                                @if ($is_admin)
+                                
                                     <th>Actions</th>
                                     <th>Propriétaire</th>
-                                @endif
+                                
                                 
                                 
                             </tr>
@@ -31,17 +34,31 @@
                             <td><a href='https://{{$domain->name}}' target="new">{{$domain->name}}</a></td>
                                 <td>
                                     <span class='label {{$domain->status == 0 ? "label-warning":"label-success" }}'>
-                                    {{($domain->status == 0) ? "Désactivé" : "Activé"}}
+                                    {{($domain->status == 0) ? "En cours de création" : "Activé"}}
                                 </span>
                                 </td>
+                                <td>
+                                    {{$domain->package->name}}
+                                </td>
+                                <td>
+                                    <span class='label {{$domain->renewable == 0 ? "label-warning":"label-success" }}'>
+                                    {{($domain->renewable == 0) ? "Désactivé" : "Activé"}}
+                                </span>
+                                </td>
+                                <td>
+                                    <span class='label {{$domain->verrou == 0 ? "label-warning":"label-success" }}'>
+                                    {{($domain->verrou == 0) ? "Désactivé" : "Activé"}}
+                                </span>
+                                </td>
+                                
                                 <td>{{$domain->created_at}}</td>
                                 <td>{{$domain->expires_at}}</td>
-                                @if ($is_admin)
+                                
                                     <th><a href={{ route('domains.edit', ['domain'=>$domain->id]) }}>
                                         <span class="label label-success"><i class="fa fa-edit"></i></span>
                                     </a></th>
                             <th>{{$domain->user->email}}</th>
-                                @endif
+                                
                                 
                             </tr> 
                             @endforeach

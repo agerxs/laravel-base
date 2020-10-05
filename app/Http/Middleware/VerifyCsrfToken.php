@@ -13,7 +13,9 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         "/paiement/notify",
-        "https://africaweb.ci/paiement/notify",
+        
+        "/paiement/back",
+        
         
     ];
 }

@@ -28,7 +28,7 @@ class DashboardController extends Controller
             'payments_sum'=>$payments,
             'is_admin'=>AuthHelper::isAdmin(Auth::user())]);   
     }
-    else redirect()->route('domain.index');
+    else return redirect()->route('domains.index');
     }
 
 

@@ -1,8 +1,10 @@
 <?php
 if(isset($_GET['mbreadcumb'])){$menu_ul=$_GET['mbreadcumb'];}else{$menu_ul="domaine";};
 $domaine=$_GET['domaine'];
+if(!isset($formule))
+{
 $formule=$_GET['formule'];
-
+}
 
 function extension($str)
 {
@@ -70,6 +72,11 @@ $link=mysqli_connect("localhost", "root", "","africaweb", "3308");
 
 <!-- CSS | Theme Color -->
 <link href="css/colors/theme-skin-sky-blue.css" rel="stylesheet" type="text/css">
+<style>
+  .hide{
+
+  }
+  </style>
 <!-- external javascripts -->
 <script src="js/jquery-2.2.4.min.js"></script>
 <script src="js/jquery-ui.min.js"></script>
@@ -101,7 +108,8 @@ $link=mysqli_connect("localhost", "root", "","africaweb", "3308");
       <div class="container pb-60">
         <div class="row">
           <div class="col-md-12">
-            <form action="/paiement">
+            <form action="/paiement" method="POST">
+              @csrf
             <table class="table domain-price-table">
               <tbody>
                 <tr>
@@ -116,16 +124,15 @@ $link=mysqli_connect("localhost", "root", "","africaweb", "3308");
                   <td style="color: green;"><b><?php echo strtoupper($formule); ?></b></td>
                   <td>
                   <?php 
+                  $prix_domaine=prix_domaine(extension($domaine));
                   if ($formule=="starter") 
                   {
-                    echo prix_domaine(extension($domaine)).'F CFA + <select name="duree">
-                                    <option value="12-starter" selected>12 mois - 11.880F CFA (990F CFA x 12)</option>
-                                    <option value="24-starter">24 mois - 23.760F CFA (990F CFA x 24)</option>
-                                    <option value="36-starter">36 mois - 35.640F CFA (990F CFA x 36)</option>
+                    echo '<select name="duree">
+                                    <option value="12-starter" selected>12 mois - '.($prix_domaine).' FCFA + 11.880F CFA (990F CFA x 12)</option>
+                                    <option value="24-starter">24 mois - '.($prix_domaine*2).' FCFA + 23.760F CFA (990F CFA x 24)</option>
+                                    <option value="36-starter">36 mois - '.($prix_domaine*3).' FCFA + 35.640F CFA (990F CFA x 36)</option>
                           </select>';
                   } 
-
-
                   else if ($formule=="basic") 
                   {
                     echo '<select name="duree">
@@ -153,14 +160,23 @@ $link=mysqli_connect("localhost", "root", "","africaweb", "3308");
                                     <option value="24-premium">24 mois - 191.760F CFA (7.990F CFA x 24)</option>
                                     <option value="36-premium">36 mois - 287.640F CFA (7.990F CFA x 36)</option>
                           </select>';
-                  } 
-
-
-
+                  }
+                  else if ($formule=="domain") 
+                  {
+                    echo prix_domaine(extension($domaine)).'F CFA (1 an)';
+                  }
 
                   ?>
 
-                      <input type="hidden" name="domain" value={{$domaine}}>                
+                      <input type="hidden" name="domain" value={{$domaine}}>   
+                      
+                      <div class="hide">          
+                        <input type="text" id="dns1" name="dns1" value="">  
+                      <input type="text" id="dns2" name="dns2" value="">                
+                      <input type="text"  id="dns3" name="dns3" value="">                
+                      <input type="text" id="dns4" name="dns4" value=""> 
+                    </div>
+                      <input type="hidden" name="prix_domain" value={{prix_domaine(extension($domaine))}}>                
                   </td>
                 </tr>
                 <tr>
@@ -197,7 +213,23 @@ $link=mysqli_connect("localhost", "root", "","africaweb", "3308");
     </section>
     
 
-    
+    <section class="clients bg-silver-light">
+      <div class="container pt-30 pb-30">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Section: Clients -->
+            <div class="owl-carousel-6col clients-logo transparent text-center" data-autoplay="false">
+              <div class="item"> <a href="#"><img src="/images/paiements/mastercard.jpg" height="100px" alt=""></a></div>
+              <div class="item"> <a href="#"><img src="/images/paiements/moov.webp" height="100px" alt=""></a></div>
+              <div class="item"> <a href="#"><img src="/images/paiements/mtn.jpg" height="100px" alt=""></a></div>
+              <div class="item"> <a href="#"><img src="/images/paiements/orange.jpg" height="100px" alt=""></a></div>
+              <div class="item"> <a href="#"><img src="/images/paiements/visa.webp" height="100px" alt=""></a></div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
     <!-- Divider: Call To Action -->
     <section class="bg-theme-colored-2">
       <div class="container pt-0 pb-0">
@@ -228,6 +260,27 @@ $link=mysqli_connect("localhost", "root", "","africaweb", "3308");
 
 <!-- JS | Custom script for all pages -->
 <script src="js/custom.js"></script>
+<script>
+$(document).ready(function() {
+  var dns1=localStorage.getItem('dns1');
+  var dns2=localStorage.getItem('dns2');
+  var dns3=localStorage.getItem('dns3');
+  var dns4=localStorage.getItem('dns4');
 
+  if(dns1==null){
+    dns1 = "dns1.africaweb.ci";
+  }
+  if(dns1==null){
+    dns2 = "dns2.africaweb.ci";
+  }
+  $('input[name="dns1"]').val(dns1);
+  $('input[name="dns2"]').val(dns2);
+  $('input[name="dns3"]').val(dns3);
+  $('input[name="dns4"]').val(dns4);
+  //console.log(dns1);
+//document.getElementById('dns1').setAttribute('value', "dns1.africaweb.ci");
+//document.getElementById('dns2').val(dns2);
+});
+  </script>
 </body>
 </html>

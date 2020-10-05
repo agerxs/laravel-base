@@ -126,13 +126,57 @@ if(isset($_GET['mbreadcumb'])){$menu_ul=$_GET['mbreadcumb'];}else{$menu_ul="doma
             if(isset($_GET["pack"]))
             { ?>
               <div class="col-md-12 alert bg-info">
-                  Vous avez sélectionné le pack {{$_GET["pack"]}}. <br>
+                 
                   <p>Veuillez entrer un nom de domain svp</p>
               </div>
               <?php
             }
              ?>
-          
+
+          <div class="alert"><h4 class="strong">Nom de domaine en :<strong> {{$_GET['tld']}} </strong></h4></div>
+          <div class="row"> 
+            <div class="col-md-8 pt-20">
+             
+              <form  name="reservation_form" method="get" 
+             
+              action={{ route('resultat_domain_for_extension').'#rslt' }}>
+              
+              <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-4 pr-0 pr-xs-15">
+                  <div class="form-group mb-15">
+                    <input name="domaine" class="form-control required domaine font-weight-700" aria-required="true" type="domaine" id="tochange">
+                    <input name="mbreadcumb" type="hidden" value="domaine">
+
+                  </div>
+                </div>
+                @if(isset($_GET['pack']))
+                <input type="hidden" name="pack" value={{$_GET['pack']}}>
+                
+                @endif
+                <div class="col-xs-12 col-sm-2 col-md-2 pr-0 pl-0 pr-xs-15 pl-xs-15">
+                  <div class="form-group mb-15 mt-0">
+                    <input name="form_botcheck" class="form-control" value="" type="hidden">
+                    <input name="tld" class="form-control" value="{{$_GET['tld']}}" type="hidden">
+                    
+                  <span  class="btn btn-secondary btn-lg btn-flat border-1px form-control" >{{$_GET['tld']}}</span>
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-3 col-md-3 pr-0 pl-0 pr-xs-15 pl-xs-15">
+                  <div class="form-group mb-15 mt-0">
+                    
+                    
+                  <button type="submit" class="btn btn-theme-colored btn-lg btn-flat border-1px form-control" data-loading-text="Please wait...">Trouver</button>
+                  
+                  
+                  </div>
+                </div>
+               
+              </div>
+      </form>
+        </div> 
+          </div>
+
+
           <div class="col-md-12">
             <table class="table domain-price-table">
               <tbody>
@@ -142,11 +186,11 @@ if(isset($_GET['mbreadcumb'])){$menu_ul=$_GET['mbreadcumb'];}else{$menu_ul="doma
                   <td>2 ans</td>
                   <td>Renouvellement</td>
                   <td>Transfert</td>
-                  <td>Commander</td>
+                  
                 </tr>
 <?php { 
                 
-    foreach($tlds ?? '' as $tld)
+    foreach($tlds as $tld)
 {    
 
 
@@ -157,14 +201,8 @@ if(isset($_GET['mbreadcumb'])){$menu_ul=$_GET['mbreadcumb'];}else{$menu_ul="doma
                   <td><?php  printf($tld->prixVente_tld*2);?>F CFA</td>
                   <td><?php  printf($tld->prixVente_tld);?>F CFA</td>
                   <td><?php  printf($tld->prixVente_tld);?>F CFA</td>
-                  <td>
-                    @if(isset($_GET["pack"]))
-                    <a href={{ route('enregistrementbyextension', ['pack'=>$_GET['pack'],'tld'=>$tld->extension_tld]) }} class="btn btn-sm btn-theme-colored">Réserver</a></td>
-                    @else
-                    <a href={{ route('enregistrementbyextension',['tld'=>$tld->extension_tld]) }} class="btn btn-sm btn-theme-colored">Réserver</a></td>
-                    
-                    @endif
-                  </tr>
+                  
+                </tr>
 
 <?php }} 
 
@@ -208,6 +246,14 @@ if(isset($_GET['mbreadcumb'])){$menu_ul=$_GET['mbreadcumb'];}else{$menu_ul="doma
 
 <!-- JS | Custom script for all pages -->
 <script src="js/custom.js"></script>
-
+<script>
+  var $valueOnChange = $("#tochange")
+$changedInput.on("input", function (event) {
+    $valueOnInput.html($changedInput.val())
+})
+$changedInput.on("change", function (event) {
+    $valueOnChange.html($changedInput.val())
+})
+</script>
 </body>
 </html>

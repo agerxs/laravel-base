@@ -1002,7 +1002,8 @@
                         <li>Assistance 365</li>
 
                       </ul>
-                      <a class="btn btn-colored btn-theme-colored text-uppercase mt-10" href="#">Commander</a><br>
+                      <a class="btn btn-colored btn-theme-colored text-uppercase mt-10" href={{ route('enregistrement', ['pack'=>'starter']) }}>
+                        Commander</a><br>
                     </div>
                   </div>
                 </div>
@@ -1036,7 +1037,7 @@
                         <li>Cpanel gratuit</li>
                         <li>Assistance 365</li>
                       </ul>
-                      <a class="btn btn-colored btn-theme-colored text-uppercase mt-10" href="#">Commandez</a><br>
+                      <a class="btn btn-colored btn-theme-colored text-uppercase mt-10" href={{ route('enregistrement', ['pack'=>'basic']) }}>Commandez</a><br>
                     </div>
                   </div>
                 </div>
@@ -1098,7 +1099,7 @@
                         <li>Cpanel gratuit</li>
                         <li>Assistance 365</li>
                       </ul>
-                      <a class="btn btn-colored btn-theme-colored text-uppercase mt-10" href="#">Commandez</a><br>
+                      <a class="btn btn-colored btn-theme-colored text-uppercase mt-10" href={{ route('enregistrement', ['pack'=>'gold']) }}>Commandez</a><br>
                     </div>
                   </div>
                 </div>
@@ -1126,7 +1127,7 @@
                         <li>Cpanel gratuit</li>
                         <li>Assistance 365</li>
                       </ul>
-                      <a class="btn btn-colored btn-theme-colored text-uppercase mt-10" href="#">Commandez</a><br>
+                      <a class="btn btn-colored btn-theme-colored text-uppercase mt-10" href={{ route('enregistrement', ['pack'=>'premium']) }}>Commandez</a><br>
                     </div>
                   </div>
                 </div>
